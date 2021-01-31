@@ -293,7 +293,7 @@ def train(name_dataset, num, wd, lam, bw, seed, t, mode=None):
             optimizer.step()
 
             # for future print
-            print(f"    batch_train_loss: {loss:.4f}, original={loss:.4f}, J3={J3:.4f}, J5={J5:.4f}")
+            print(f"    batch_train_loss: {loss:.4f}, original={loss:.4f}, J3={J3:.4f}, J5={J5:.4f}", flush=True)
             train_loss += loss
 
 
@@ -305,7 +305,7 @@ def train(name_dataset, num, wd, lam, bw, seed, t, mode=None):
             results.append([epoch, train_loss, test_loss, acc])
         if mode == "one":
             results.append([epoch, train_loss, test_loss, acc])
-        print(f'(lam={lam},bw={bw},t={t})epoch={epoch}, trainloss={train_loss:.3f}, testloss={test_loss:.3f}, testacc={acc:.3f}')
+        print(f'(lam={lam},bw={bw},t={t})epoch={epoch}, trainloss={train_loss:.3f}, testloss={test_loss:.3f}, testacc={acc:.3f}', flush=True)
         model.train()
 
     return model
@@ -322,11 +322,11 @@ if __name__ == "__main__":
     parser.add_argument('--seedtype', type=str, default='one', help='seed type, including 3 types: "one", "multiple", "random"')
 
     args = parser.parse_args()
-    print(f'num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}, T={args.T}, seedtype={args.seedtype}')
+    print(f'num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}, T={args.T}, seedtype={args.seedtype}', flush=Truegit )
 
     # Set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(device)
+    print(device, flush=True)
 
     # Hyperparameters
     in_channel = 1
