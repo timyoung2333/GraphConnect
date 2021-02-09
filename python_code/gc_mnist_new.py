@@ -316,13 +316,13 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="")
     parser.add_argument('--seed', type=int, help='seed value')
-    # parser.add_argument('--num', type=int, default=50, help='number of each class')
-    # parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
-    # parser.add_argument('--lam', type=float, default=0, help='graph connect coefficient lambda')
-    # parser.add_argument('--bw', type=float, default=1e-5, help='bandwidth(sigma)')
+    parser.add_argument('--num', type=int, default=50, help='number of each class')
+    parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
+    parser.add_argument('--lam', type=float, default=0, help='graph connect coefficient lambda')
+    parser.add_argument('--bw', type=float, default=1e-5, help='bandwidth(sigma)')
 
     args = parser.parse_args()
-    print(f'seed={args.seed}', flush=True)
+    print(f'seed={args.seed}, num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}', flush=True)
 
     # Set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -340,11 +340,7 @@ if __name__ == "__main__":
     # wd: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1:1e-1:5e-1]
     # lam: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1]
     # bw: np.logspace(-3, 3, 50)
-    seed = args.seed
-    num = 100
-    wd = 0
-    lam = 0.0001
-    bw = 10
+    seed, num, wd, lam, bw = args.seed, args.num, args.wd, args.lam, args.bw
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
