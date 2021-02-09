@@ -112,6 +112,7 @@ def getSubset(dataset, num, seed):
     C = {}
     for i in range(0, N):
         tmp = l[dataset.targets == i]
+        torch.manual_seed(seed)
         t = torch.randperm(tmp.size(0))
         C[i] = tmp[t]
 
@@ -236,7 +237,7 @@ def test(model, loader, epoch, writer):
         accuracy = num_correct / num_samples
         return test_loss, accuracy
 
-def train(name_dataset, num, wd, lam, bw, seed, t, mode=None):
+def train(name_dataset, seed, num, wd, lam, bw, mode=None):
     train_dataset, train_loader, test_dataset, test_loader = loadData()
 
     if mode != None and bw != None:
@@ -305,23 +306,23 @@ def train(name_dataset, num, wd, lam, bw, seed, t, mode=None):
             results.append([epoch, train_loss, test_loss, acc])
         if mode == "one":
             results.append([epoch, train_loss, test_loss, acc])
-        print(f'(lam={lam},bw={bw},t={t})epoch={epoch}, trainloss={train_loss:.3f}, testloss={test_loss:.3f}, testacc={acc:.3f}', flush=True)
+        print(f'(num={num},lam={lam},bw={bw})epoch={epoch}, trainloss={train_loss:.3f}, testloss={test_loss:.3f}, testacc={acc:.3f}', flush=True)
         model.train()
 
     return model
     
 
-if __name__ == "__main__":file:///home/tim/Downloads/ubuntu-20.04.2-desktop-amd64.iso
+if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument('--num', type=int, default=50, help='number of each class')
-    parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
-    parser.add_argument('--lam', type=float, default=0, help='graph connect coefficient lambda')
-    parser.add_argument('--bw', type=float, default=1e-5, help='bandwidth(sigma)')
-    parser.add_argument('--T', type=int, default=1, help='number of running times')
-    parser.add_argument('--seedtype', type=str, default='one', help='seed type, including 3 types: "one", "multiple", "random"')
+    parser.add_argument('--seed', type=int, help='seed value')
+    # parser.add_argument('--num', type=int, default=50, help='number of each class')
+    # parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
+    # parser.add_argument('--lam', type=float, default=0, help='graph connect coefficient lambda')
+    # parser.add_argument('--bw', type=float, default=1e-5, help='bandwidth(sigma)')
 
     args = parser.parse_args()
-    print(f'num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}, T={args.T}, seedtype={args.seedtype}', flush=Truegit )
+    print(f'seed={args.seed}', flush=True)
 
     # Set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -335,28 +336,24 @@ if __name__ == "__main__":file:///home/tim/Downloads/ubuntu-20.04.2-desktop-amd6
     num_epochs = 200
     momentum = 0.9
 
-    num, wd, lam, bw, T, seedtype = args.num, args.wd, args.lam, args.bw, args.T, args.seedtype
-    seeds = np.zeros(T)
-    if seedtype == 'one': # means all the T times use the same seed that the user enters
-        seed = input('enter one seed: ')
-        seeds = int(seed) * np.ones(T)
-    elif seedtype == 'multiple': # means different times use different seeds
-        while True:
-            seeds = [int(item) for item in input('enter the seeds: ').split()]
-            if len(seeds) == T:
-                break
-    elif seedtype == 'random': # randomly generate T seeds
-        seeds = np.random.randint(1, 100, size=T)
+    # num: 50, 100, 200, 500, 1000
+    # wd: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1:1e-1:5e-1]
+    # lam: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1]
+    # bw: np.logspace(-2, 3, 50)
+    seed = args.seed
+    num = 100
+    wd = 0
+    lam = 0.0001
+    bw = 10
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
-    filename = f"num{num}_lam{lam}_bw{bw}.csv"
+    filename = f"seed{seed}_num{num}_wd{wd}_lam{lam}_bw{bw}.csv"
     with open(filename, 'w') as f:
         writer = csv.writer(f, dialect='excel')
-        for t in range(T):
-            results = [] # each epoch result
-            train(name_dataset="MNIST", num=num, wd=wd, lam=lam, bw=bw, t=t, seed=seeds[t], mode="one")
-            written_results.append(results[-1])
+        results = [] # each epoch result
+        train(name_dataset="MNIST", seed=seed, num=num, wd=wd, lam=lam, bw=bw, mode="one")
+        written_results.append(results)
         writer.writerows(written_results)
         
 
