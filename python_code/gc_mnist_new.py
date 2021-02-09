@@ -339,7 +339,7 @@ if __name__ == "__main__":
     # num: 50, 100, 200, 500, 1000
     # wd: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1:1e-1:5e-1]
     # lam: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1]
-    # bw: np.logspace(-2, 3, 50)
+    # bw: np.logspace(-3, 3, 50)
     seed = args.seed
     num = 100
     wd = 0
@@ -348,7 +348,8 @@ if __name__ == "__main__":
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
-    filename = f"seed{seed}_num{num}_wd{wd}_lam{lam}_bw{bw}.csv"
+    bw_str = "{:.4f}".format(bw)
+    filename = f"seed{seed}_num{num}_wd{wd}_lam{lam}_bw{bw_str}.csv"
     with open(filename, 'w') as f:
         writer = csv.writer(f, dialect='excel')
         results = [] # each epoch result
