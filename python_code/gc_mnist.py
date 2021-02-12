@@ -311,7 +311,7 @@ def train(name_dataset, num, wd, lam, bw, seed, t, mode=None):
     return model
     
 
-if __name__ == "__main__":file:///home/tim/Downloads/ubuntu-20.04.2-desktop-amd64.iso
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
     parser.add_argument('--num', type=int, default=50, help='number of each class')
     parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
