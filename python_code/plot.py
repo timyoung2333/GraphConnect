@@ -10,60 +10,137 @@ res_dir = cur_dir + '/gc_mnist_result/'
 res, dicts = get_all_results(res_dir, 200)
 num_dict, wd_dict, lam_dict, bw_dict = dicts[0], dicts[1], dicts[2], dicts[3]
 
-## Figure 1:
-# let's plot num = 500, 1000, wd = 0, different lams on different bw
-# bw vs loss & acc
-fig = plt.figure(1)
-x = list(bw_dict.keys())
-lams = [0.01, 0.001, 0.0001, 1e-5, 0]
-for lam in lams:
-    y = res[num_dict[500], wd_dict[0], lam_dict[lam], :, -1, :]
-    plt.plot(x, y[:, 1], ls='-', marker='.', label=f'train loss, lam={lam}')
-plt.xscale('log')
-plt.xlabel('bandwidth')
-plt.ylabel('loss')
-plt.legend()
-plt.grid(True)
+# ## first few figures, x-axis bandwidth
+# # let's plot num = 500, 1000, wd = 0, different lams on different bw
+# # bw vs loss & acc
+# x = list(bw_dict.keys())
+# lams = [0, 1e-5, 0.0001, 0.001, 0.01]
+# num = 1000
+# fig = plt.figure(1)
 
-fig = plt.figure(2)
-x = list(bw_dict.keys())
-lams = [0.01, 0.001, 0.0001, 1e-5, 0]
-for lam in lams:
-    y = res[num_dict[500], wd_dict[0], lam_dict[lam], :, -1, :]
-    plt.plot(x, y[:, 2], ls='-', marker='.', label=f'test loss, lam={lam}')
-plt.xscale('log')
-plt.xlabel('bandwidth')
-plt.ylabel('loss')
-plt.legend()
-plt.grid(True)
-plt.show()
-
-fig = plt.figure(3)
-x = list(bw_dict.keys())
-lams = [0.01, 0.001, 0.0001, 1e-5, 0]
-for lam in lams:
-    y = res[num_dict[500], wd_dict[0], lam_dict[lam], :, -1, :]
-    plt.plot(x, y[:, 3], ls='-', marker='.', label=f'accuracy, lam={lam}')
-plt.xscale('log')
-plt.xlabel('bandwidth')
-plt.ylabel('acc')
-plt.legend()
-plt.grid(True)
-plt.show()
-
-
-
-# ## Figure 2:
-# # lambda vs. loss
-# fig = plt.figure(3)
-# x = list(lam_dict.keys())
-# y = res[num_dict[500], wd_dict[0], :, bw_dict[6.1585], -1, :]
-# plt.plot(x, y[:, 1])
-# plt.plot(x, y[:, 2])
+# plt.subplot(131)
+# for lam in lams:
+#     y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
+#     xx = np.array([x[i] for i in range(len(x)) if y[i, 1] != 0])
+#     yy = np.array([y[i] for i in range(len(x)) if y[i, 1] != 0])
+#     plt.plot(xx, yy[:, 1], ls='-', marker='.', label=f'train loss, lam={lam}')
 # plt.xscale('log')
+# plt.xlabel('bandwidth')
+# plt.ylabel('training loss')
+# plt.legend()
+# plt.grid(True)
+
+# plt.subplot(132)
+# for lam in lams:
+#     y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
+#     xx = np.array([x[i] for i in range(len(x)) if y[i, 2] != 0])
+#     yy = np.array([y[i] for i in range(len(x)) if y[i, 2] != 0])
+#     plt.plot(xx, yy[:, 2], ls='-', marker='.', label=f'test loss, lam={lam}')
+# plt.xscale('log')
+# plt.xlabel('bandwidth')
+# plt.ylabel('test loss')
+# plt.legend()
+# plt.grid(True)
+
+
+# plt.subplot(133)
+# for lam in lams:
+#     y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
+#     xx = np.array([x[i] for i in range(len(x)) if y[i, 3] != 0])
+#     yy = np.array([y[i] for i in range(len(x)) if y[i, 3] != 0])
+#     plt.plot(xx, yy[:, 3], ls='-', marker='.', label=f'accuracy, lam={lam}')
+# plt.xscale('log')
+# plt.xlabel('bandwidth')
+# plt.ylabel('accuracy')
+# plt.legend()
+# plt.grid(True)
+# mngr = plt.get_current_fig_manager()
+# mngr.window.setGeometry(50,100,2000, 545)
+
+
+
+# ## second few figures
+# # lambda vs. loss
+# x = list(lam_dict.keys())
+# # x = np.array([x[i] in x for i in range(len(x)) if x[i] < 0.1])
+# bws = list(bw_dict.keys())
+# bws = [bws[2 * i] for i in range(len(bws)//2)]
+# num = 500
+# fig = plt.figure(2)
+
+# plt.subplot(131)
+# for bw in bws:
+#     y = res[num_dict[num], wd_dict[0],:, bw_dict[bw], -1, :]
+#     xx = np.array([x[i] for i in range(len(x)) if y[i, 1] != 0])
+#     yy = np.array([y[i] for i in range(len(x)) if y[i, 1] != 0])
+#     plt.plot(xx, yy[:, 1], ls='-', marker='.', label=f'train loss, bw={bw}')
+# plt.xscale('log')
+# plt.xlabel('lambda')
+# plt.ylabel('training loss')
+# plt.legend()
+# plt.grid(True)
+
+# plt.subplot(132)
+# for bw in bws:
+#     y = res[num_dict[num], wd_dict[0],:, bw_dict[bw], -1, :]
+#     xx = np.array([x[i] for i in range(len(x)) if y[i, 2] != 0])
+#     yy = np.array([y[i] for i in range(len(x)) if y[i, 2] != 0])
+#     plt.plot(xx, yy[:, 2], ls='-', marker='.', label=f'test loss, bw={bw}')
+#     plt.xscale('log')
+# plt.xlabel('lambda')
+# plt.ylabel('test loss')
+# plt.legend()
+# plt.grid(True)
+
+
+# plt.subplot(133)
+# for bw in bws:
+#     y = res[num_dict[num], wd_dict[0],:, bw_dict[bw], -1, :]
+#     xx = np.array([x[i] for i in range(len(x)) if y[i, 3] != 0])
+#     yy = np.array([y[i] for i in range(len(x)) if y[i, 3] != 0])
+#     plt.plot(xx, yy[:, 3], ls='-', marker='.', label=f'accuracy, bw={bw}')
+#     plt.xscale('log')
+# plt.xlabel('lambda')
+# plt.ylabel('accuracy')
+# plt.legend()
+# plt.grid(True)
+# mngr = plt.get_current_fig_manager()
+# mngr.window.setGeometry(50,100,2000, 545)
+
 # plt.show()
 
-## Figure 2: 
-# epochs vs loss & acc (diff num, lam, bw)
+## third few figures
+# num vs. epochs
+x = list(range(200))
+# x = np.array([x[i] in x for i in range(len(x)) if x[i] < 0.1])
+nums = [100, 200, 500, 1000]
+
+fig = plt.figure(3)
+
+plt.subplot(121)
+for num in nums:
+    y = res[num_dict[num], wd_dict[0], lam_dict[0.0001], bw_dict[12.7427], :, :]
+    plt.plot(x, y[:, 1], ls='-', marker=None, label=f'train loss, num={num}')
+    plt.plot(x, y[:, 2], ls='--', marker=None, label=f'test loss, num={num}')
+plt.xlabel('epochs')
+plt.ylabel('training loss')
+plt.legend()
+plt.grid(True)
+
+
+
+plt.subplot(122)
+for num in nums:
+    y = res[num_dict[num], wd_dict[0], lam_dict[0.0001], bw_dict[12.7427], :, :]
+    plt.plot(x, y[:, 3], ls='-', marker=None, label=f'accuracy, num={num}')
+plt.xlabel('epochs')
+plt.ylabel('accuracy')
+plt.legend()
+plt.grid(True)
+
+mngr = plt.get_current_fig_manager()
+mngr.window.setGeometry(50,100,1500, 545)
+
+plt.show()
 
 
