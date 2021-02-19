@@ -5,9 +5,9 @@ import os
 import time
 
 
-num = [500]
+num = [100]
 seed = [0]
-tc = [3]
+tc = [2]
 wd = [0]
 lam = [0.0001]
 bw = np.logspace(-3, 3, 20)

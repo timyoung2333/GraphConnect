@@ -13,7 +13,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from collections import defaultdict
 import csv
-import sys
+import sys, os
 # argparse
 import argparse
 
@@ -326,7 +326,7 @@ if __name__ == "__main__":
     num_classes = 10
     learning_rate = 0.001
     batch_size = 100
-    num_epochs = 160
+    num_epochs = 100
     momentum = 0.9
 
 
@@ -364,13 +364,17 @@ if __name__ == "__main__":
     # bw: np.logspace(-3, 3, 50)
     
     # open a log file
-    log_file = open(f"/home/tim/Desktop/Research/GraphConnect/log_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}.log", 'w')
+    cwd = os.getcwd()
+    print(cwd)
+
+    log_file = open(f"{cwd}/log_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}.log", 'w')
     sys.stdout = log_file
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
     
-    filename = f"./gc_mnist_result_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}.csv"
+    
+    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}.csv"
     with open(filename, 'w') as f:
         writer = csv.writer(f, dialect='excel')
         results = [] # each epoch result
