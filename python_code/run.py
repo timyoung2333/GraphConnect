@@ -25,12 +25,12 @@ for n in num:
                         process = f"./python_code/gc_mnist_eachclass.py --seed={s} --num={n} --tc={c} --wd={w} --lam={l} --bw={b}"
                         processes.append(process)
 
-eachtime = 4
+eachtime = 2
 i = 0
-while i + 4 < len(processes):
-    pool = Pool(processes=4)
-    pool.map(run_process, processes[i:i+4])
-    i += 4
+while i + eachtime < len(processes):
+    pool = Pool(processes=eachtime)
+    pool.map(run_process, processes[i:i+eachtime])
+    i += eachtime
 
 if i < len(processes):
     pool = Pool(processes=len(processes)-i)

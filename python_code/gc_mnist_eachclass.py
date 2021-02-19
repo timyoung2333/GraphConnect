@@ -326,7 +326,7 @@ if __name__ == "__main__":
     num_classes = 10
     learning_rate = 0.001
     batch_size = 100
-    num_epochs = 1
+    num_epochs = 160
     momentum = 0.9
 
 
