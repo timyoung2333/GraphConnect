@@ -315,11 +315,11 @@ def train(name_dataset, seed, num, wd, lam, bw, mode=None):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument('--seed', type=int, help='seed value')
-    parser.add_argument('--num', type=int, default=50, help='number of each class')
+    parser.add_argument('--seed', type=int, default=0, help='seed value')
+    parser.add_argument('--num', type=int, default=500, help='number of each class')
     parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
-    parser.add_argument('--lam', type=float, default=0, help='graph connect coefficient lambda')
-    parser.add_argument('--bw', type=float, default=1e-5, help='bandwidth(sigma)')
+    parser.add_argument('--lam', type=float, default=0.0001, help='graph connect coefficient lambda')
+    parser.add_argument('--bw', type=float, default=50, help='bandwidth(sigma)')
 
     args = parser.parse_args()
     print(f'seed={args.seed}, num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}', flush=True)
