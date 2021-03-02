@@ -172,12 +172,22 @@ def calc_weights(data, targets, sigmas):
     tmp = np.zeros(len(targets))
     for i in range(len(targets)):
         tmp[i] = sigmas[targets[i]]
+<<<<<<< HEAD
     sigmas_mat = torch.tensor(np.tile(tmp, (batch_size, 1)))
 
     tmp2 = torch.divide(-pd ** 2, sigmas_mat ** 2)
 
     pd = torch.exp(tmp2)
     
+=======
+    sigmas_mat = np.tile(tmp, (batch_size, 1))
+
+    tmp2 = np.divide(-pd ** 2, sigmas_mat ** 2)
+
+    pd = torch.exp(tmp2)
+    
+    
+>>>>>>> 6caee3ab9601d0433620572b660a6484b8dcfc24
     targets_matrix = class_matrix(batch_size, targets)
     edges_num = (torch.sum(targets_matrix) - batch_size) / 2
     W = pd * targets_matrix
