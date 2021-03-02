@@ -318,7 +318,7 @@ if __name__ == "__main__":
     parser.add_argument('--num', type=int, default=100, help='number of each class')
     parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
     parser.add_argument('--lam', type=float, default=0.0001, help='graph connect coefficient lambda')
-    parser.add_argument('--bw', type=float, default=1000, help='bandwidth(sigma)')
+    parser.add_argument('--bw', type=float, default=10, help='bandwidth(sigma)')
 
     args = parser.parse_args()
     print(f'seed={args.seed}, testclass={args.tc}, num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}', flush=True)
@@ -375,14 +375,14 @@ if __name__ == "__main__":
     cwd = os.getcwd()
     print(cwd)
 
-    log_file = open(f"{cwd}/log_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}_same.log", 'w')
+    log_file = open(f"{cwd}/log_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}_debug.log", 'w')
     sys.stdout = log_file
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
     
     
-    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}_same.csv"
+    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}_debug.csv"
     with open(filename, 'w') as f:
         writer = csv.writer(f, dialect='excel')
         results = [] # each epoch result

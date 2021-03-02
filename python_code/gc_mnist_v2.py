@@ -140,7 +140,8 @@ def pairwise_dist(n, x):
     res = res.reshape(n, n)
     return res
 
-def calc_sigmas(num, dataset, value=None):
+# C is the coefficient
+def calc_sigmas(num, dataset, value=None, coef=None):
     sigmas = np.zeros(num_classes)
     if value != None:
         sigmas = np.ones(num_classes) * value
@@ -151,6 +152,8 @@ def calc_sigmas(num, dataset, value=None):
             tmp_x = x_vec[C[c][0:num]]
             tmp_xdist = pairwise_dist(num, tmp_x)
             sigmas[c] = torch.sum(tmp_xdist) / (num * (num - 1))
+            if coef != None:
+                sigmas[c] *= coef
     return sigmas
 
 # calculate class matrix, if res[i,j] = 1, it means there exists an edge
@@ -228,15 +231,14 @@ def test(model, loaders):
             acc[idx] = (num_correct / num_samples) * 100
         return test_loss, acc
 
-def train(name_dataset, tc, seed, num, wd, lam, bw, mode=None):
+def train(name_dataset, seed, num, wd, lam, coef, mode=None):
     
     # if bw != None:
     #     sigmas = calc_sigmas(num, train_dataset, bw)
     # else:
-    sigmas = calc_sigmas(num, train_dataset, bw)
+    sigmas = calc_sigmas(num, train_dataset, coef=coef)
 
-    if (tc != None):
-        sigmas[tc] = bw
+    print(sigmas)
 
     model = CNN().to(device)
     criterion = nn.CrossEntropyLoss()
@@ -304,7 +306,7 @@ def train(name_dataset, tc, seed, num, wd, lam, bw, mode=None):
             results.append([epoch, train_loss, test_loss, acc])
         testloss_print = ["{:.3f}".format(test_loss[i]) for i in range(N)]
         acc_print = ["{:.3f}".format(acc[i]) for i in range(N)]
-        print(f'(num={num},lam={lam},bw={bw})epoch={epoch}, trainloss={train_loss:.3f}, testloss={testloss_print}, testacc={acc_print}', flush=True)
+        print(f'(num={num},lam={lam},coef={coef})epoch={epoch}, trainloss={train_loss:.3f}, testloss={testloss_print}, testacc={acc_print}', flush=True)
         model.train()
 
     return model
@@ -314,16 +316,15 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="")
     parser.add_argument('--seed', type=int, default=0, help='seed value')
-    parser.add_argument('--tc', type=int, default=0, help='test class')
     parser.add_argument('--num', type=int, default=100, help='number of each class')
     parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
     parser.add_argument('--lam', type=float, default=0.0001, help='graph connect coefficient lambda')
-    parser.add_argument('--bw', type=float, default=1000, help='bandwidth(sigma)')
+    parser.add_argument('--coef', type=float, default=1, help='bandwidth(sigma) coefficient')
 
     args = parser.parse_args()
-    print(f'seed={args.seed}, testclass={args.tc}, num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}', flush=True)
-    seed, tc, num, wd, lam, bw = args.seed, args.tc, args.num, args.wd, args.lam, args.bw
-    bw_str = "{:.4f}".format(bw)
+    print(f'seed={args.seed}, num={args.num}, wd={args.wd}, lam={args.lam}, coef={args.coef}', flush=True)
+    seed, num, wd, lam, coef = args.seed, args.num, args.wd, args.lam, args.coef
+    coef_str = "{:.4f}".format(coef)
 
     # Set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -375,18 +376,18 @@ if __name__ == "__main__":
     cwd = os.getcwd()
     print(cwd)
 
-    log_file = open(f"{cwd}/log_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}_same.log", 'w')
+    log_file = open(f"{cwd}/log_eachclass/seed{seed}__num{num}_wd{wd}_lam{lam}_coef{coef_str}.log", 'w')
     sys.stdout = log_file
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
     
     
-    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}_same.csv"
+    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_num{num}_wd{wd}_lam{lam}_coef{coef_str}.csv"
     with open(filename, 'w') as f:
         writer = csv.writer(f, dialect='excel')
         results = [] # each epoch result
-        train(name_dataset="MNIST", tc=tc, seed=seed, num=num, wd=wd, lam=lam, bw=bw, mode="one")
+        train(name_dataset="MNIST", seed=seed, num=num, wd=wd, lam=lam, coef=coef, mode="one")
         written_results.append(results)
         writer.writerows(written_results)
     log_file.close()

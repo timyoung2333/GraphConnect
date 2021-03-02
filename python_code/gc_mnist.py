@@ -321,7 +321,7 @@ if __name__ == "__main__":
     parser.add_argument('--seedtype', type=str, default='one', help='seed type, including 3 types: "one", "multiple", "random"')
 
     args = parser.parse_args()
-    print(f'num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}, T={args.T}, seedtype={args.seedtype}', flush=Truegit )
+    print(f'num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}, T={args.T}, seedtype={args.seedtype}', flush=True )
 
     # Set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

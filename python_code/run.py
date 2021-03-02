@@ -5,12 +5,11 @@ import os
 import time
 
 
-num = [100]
+num = [200]
 seed = [0]
-tc = [2]
 wd = [0]
 lam = [0.0001]
-bw = np.logspace(-3, 3, 20)
+coef = np.arange(0.5, 5, 0.1)
 
 def run_process(process):
     os.system("python {}".format(process))
@@ -18,14 +17,13 @@ def run_process(process):
 processes = []
 for n in num:
     for s in seed:
-        for c in tc:
             for w in wd:
                 for l in lam:
-                    for b in bw:
-                        process = f"./python_code/gc_mnist_eachclass.py --seed={s} --num={n} --tc={c} --wd={w} --lam={l} --bw={b}"
+                    for co in coef:
+                        process = f"./python_code/gc_mnist_v2.py --seed={s} --num={n} --wd={w} --lam={l} --coef={co}"
                         processes.append(process)
 
-eachtime = 2
+eachtime = 1
 i = 0
 while i + eachtime < len(processes):
     pool = Pool(processes=eachtime)
