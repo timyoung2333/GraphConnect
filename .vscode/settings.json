@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "D:\\ProgramFiles\\Anaconda\\python.exe",
+    "python.pythonPath": "/home/timyang/anaconda3/bin/python",
     "python.linting.enabled": false
 }

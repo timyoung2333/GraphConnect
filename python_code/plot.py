@@ -2,63 +2,71 @@ import os
 from file_proc_eachclass import get_all_results
 import numpy as np
 from matplotlib import pyplot as plt
-
-cur_dir = os.getcwd()
-if 'python_code' in cur_dir:
-    cur_dir = cur_dir.replace('/python_code', '')
-res_dir = cur_dir + '/gc_mnist_result_eachclass/'
-res, dicts = get_all_results(res_dir, 100, 2)
-num_dict, wd_dict, lam_dict, bw_dict = dicts[0], dicts[1], dicts[2], dicts[3]
-
-## first few figures, x-axis bandwidth
-# bw vs loss & acc
-x = list(bw_dict.keys())
-lams = [0.0001]
-num = 100
-fig = plt.figure(1)
-
-plt.subplot(131)
-for lam in lams:
-    y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
-    xx = np.array([x[i] for i in range(len(x)) if y[i, 1] != 0])
-    yy = np.array([y[i] for i in range(len(x)) if y[i, 1] != 0])
-    plt.plot(xx, yy[:, 1], ls='-', marker='.', label=f'train loss, lam={lam}')
-plt.xscale('log')
-plt.xlabel('bandwidth')
-plt.ylabel('training loss')
-plt.legend()
-plt.grid(True)
-
-plt.subplot(132)
-for lam in lams:
-    y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
-    xx = np.array([x[i] for i in range(len(x)) if y[i, 2] != 0])
-    yy = np.array([y[i] for i in range(len(x)) if y[i, 2] != 0])
-    plt.plot(xx, yy[:, 2], ls='-', marker='.', label=f'test loss, lam={lam}')
-plt.xscale('log')
-plt.xlabel('bandwidth')
-plt.ylabel('test loss')
-plt.legend()
-plt.grid(True)
+import matplotlib
+# matplotlib.use("Qt5Agg")
 
 
-plt.subplot(133)
-for lam in lams:
-    y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
-    xx = np.array([x[i] for i in range(len(x)) if y[i, 3] != 0])
-    yy = np.array([y[i] for i in range(len(x)) if y[i, 3] != 0])
-    plt.plot(xx, yy[:, 3], ls='-', marker='.', label=f'accuracy, lam={lam}')
-plt.xscale('log')
-plt.xlabel('bandwidth')
-plt.ylabel('accuracy')
-plt.legend()
-plt.grid(True)
-# mngr = plt.get_current_fig_manager()
-# mngr.window.setGeometry(50,100,2000, 545)
-fig.savefig("1.pdf")
-plt.show()
 
 
+def plt_bw(test_class):
+
+    cur_dir = os.getcwd()
+    if 'python_code' in cur_dir:
+        cur_dir = cur_dir.replace('/python_code', '')
+    res_dir = cur_dir + '/gc_mnist_result_eachclass/'
+    res, dicts = get_all_results(res_dir, 150, test_class)
+    num_dict, wd_dict, lam_dict, bw_dict = dicts[0], dicts[1], dicts[2], dicts[3]
+
+    ## first few figures, x-axis bandwidth
+    # bw vs loss & acc
+    x = list(bw_dict.keys())
+    lams = [0.0001]
+    num = 200
+    fig = plt.figure()
+
+    plt.subplot(131)
+    for lam in lams:
+        y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
+        xx = np.array([x[i] for i in range(len(x)) if y[i, 1] != 0])
+        yy = np.array([y[i] for i in range(len(x)) if y[i, 1] != 0])
+        plt.plot(xx, yy[:, 1], ls='-', marker='.', label=f'train loss, lam={lam}')
+    plt.xscale('log')
+    plt.xlabel('bandwidth')
+    plt.ylabel('training loss')
+    plt.legend()
+    plt.grid(True)
+
+    plt.subplot(132)
+    for lam in lams:
+        y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
+        xx = np.array([x[i] for i in range(len(x)) if y[i, 2] != 0])
+        yy = np.array([y[i] for i in range(len(x)) if y[i, 2] != 0])
+        plt.plot(xx, yy[:, 2], ls='-', marker='.', label=f'test loss, lam={lam}')
+    plt.xscale('log')
+    plt.xlabel('bandwidth coefficient')
+    plt.ylabel('test loss')
+    plt.legend()
+    plt.grid(True)
+
+
+    plt.subplot(133)
+    for lam in lams:
+        y = res[num_dict[num], wd_dict[0], lam_dict[lam], :, -1, :]
+        xx = np.array([x[i] for i in range(len(x)) if y[i, 3] != 0])
+        yy = np.array([y[i] for i in range(len(x)) if y[i, 3] != 0])
+        plt.plot(xx, yy[:, 3], ls='-', marker='.', label=f'accuracy, lam={lam}')
+    plt.xscale('log')
+    plt.xlabel('bandwidth')
+    plt.ylabel('accuracy')
+    plt.legend()
+    plt.grid(True)
+    # mngr = plt.get_current_fig_manager()
+    # mngr.window.setGeometry(50,100,2000, 545)
+    fig.savefig(f"{test_class}.pdf")
+    plt.show()
+
+for i in range(10):
+    plt_bw(i)
 
 # ## second few figures
 # # lambda vs. loss
