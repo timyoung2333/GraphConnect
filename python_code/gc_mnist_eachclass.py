@@ -172,6 +172,14 @@ def calc_weights(data, targets, sigmas):
     tmp = np.zeros(len(targets))
     for i in range(len(targets)):
         tmp[i] = sigmas[targets[i]]
+<<<<<<< HEAD
+    sigmas_mat = torch.tensor(np.tile(tmp, (batch_size, 1)))
+
+    tmp2 = torch.divide(-pd ** 2, sigmas_mat ** 2)
+
+    pd = torch.exp(tmp2)
+    
+=======
     sigmas_mat = np.tile(tmp, (batch_size, 1))
 
     tmp2 = np.divide(-pd ** 2, sigmas_mat ** 2)
@@ -179,6 +187,7 @@ def calc_weights(data, targets, sigmas):
     pd = torch.exp(tmp2)
     
     
+>>>>>>> 6caee3ab9601d0433620572b660a6484b8dcfc24
     targets_matrix = class_matrix(batch_size, targets)
     edges_num = (torch.sum(targets_matrix) - batch_size) / 2
     W = pd * targets_matrix
@@ -199,7 +208,7 @@ def calc_loss(W, e_num, x, targets, lam):
 
     W_vec = W.reshape(-1)
     f_dist_vec = f_dist.reshape(-1) ** 2
-    J = lam * torch.dot(W_vec, f_dist_vec) / e_num
+    J = lam * torch.dot(W_vec, f_dist_vec.double()) / e_num
 
     return J
 
@@ -234,7 +243,7 @@ def train(name_dataset, tc, seed, num, wd, lam, bw, mode=None):
     # if bw != None:
     #     sigmas = calc_sigmas(num, train_dataset, bw)
     # else:
-    sigmas = calc_sigmas(num, train_dataset)
+    sigmas = calc_sigmas(num, train_dataset, bw)
 
     if (tc != None):
         sigmas[tc] = bw
@@ -316,10 +325,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
     parser.add_argument('--seed', type=int, default=0, help='seed value')
     parser.add_argument('--tc', type=int, default=0, help='test class')
-    parser.add_argument('--num', type=int, default=500, help='number of each class')
+    parser.add_argument('--num', type=int, default=100, help='number of each class')
     parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
     parser.add_argument('--lam', type=float, default=0.0001, help='graph connect coefficient lambda')
-    parser.add_argument('--bw', type=float, default=1e-5, help='bandwidth(sigma)')
+    parser.add_argument('--bw', type=float, default=1000, help='bandwidth(sigma)')
 
     args = parser.parse_args()
     print(f'seed={args.seed}, testclass={args.tc}, num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}', flush=True)
@@ -335,7 +344,7 @@ if __name__ == "__main__":
     num_classes = 10
     learning_rate = 0.001
     batch_size = 100
-    num_epochs = 100
+    num_epochs = 150
     momentum = 0.9
 
 
@@ -376,14 +385,14 @@ if __name__ == "__main__":
     cwd = os.getcwd()
     print(cwd)
 
-    log_file = open(f"{cwd}/log_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}.log", 'w')
+    log_file = open(f"{cwd}/log_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}_same.log", 'w')
     sys.stdout = log_file
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
     
     
-    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}.csv"
+    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_tc{tc}_num{num}_wd{wd}_lam{lam}_bw{bw_str}_same.csv"
     with open(filename, 'w') as f:
         writer = csv.writer(f, dialect='excel')
         results = [] # each epoch result

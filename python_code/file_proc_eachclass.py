@@ -72,6 +72,4 @@ if 'python_code' in cur_dir:
 res_dir = cur_dir + '/gc_mnist_result_eachclass/'
 res, dicts = get_all_results(res_dir, 100, 2)
 
-a = 0
-
 

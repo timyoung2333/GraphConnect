@@ -13,7 +13,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from collections import defaultdict
 import csv
-
+import sys, os
 # argparse
 import argparse
 
@@ -86,34 +86,12 @@ class CNN(nn.Module):
 
         x = self.conv4(x)
         # reshape
-        x = x.reshape(batch_size, num_classes)
+        x = x.reshape(x.shape[0], num_classes)
 
         return x
-    
-
-# Load Data
-def loadData(dataset=None):
-    transform = transforms.Compose([transforms.ToTensor()])
-    train_dataset = datasets.MNIST(
-        root="./data/", train=True, transform=transform, download=True
-    )
-    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-
-    test_dataset = datasets.MNIST(
-        root="./data/", train=False, transform=transforms.ToTensor(), download=True
-    )
-    test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
-    return train_dataset, train_loader, test_dataset, test_loader
 
 # get training data subset
 def getSubset(dataset, num, seed):
-    N = torch.unique(dataset.targets).shape[0]
-    l = torch.arange(dataset.data.shape[0])
-    C = {}
-    for i in range(0, N):
-        tmp = l[dataset.targets == i]
-        t = torch.randperm(tmp.size(0))
-        C[i] = tmp[t]
 
     indices = np.array([])
     for i in range(N):
@@ -135,6 +113,14 @@ def getSubset(dataset, num, seed):
 
     return DataLoader(subset, batch_size=batch_size, shuffle=True), data, targets, mean, std
 
+def getTestLoader(dataset, c=None):
+    if c != None:
+        indices = torch.arange(dataset.data.shape[0])[dataset.targets == c]
+        subset = torch.utils.data.Subset(dataset, indices)
+        return DataLoader(subset, batch_size=tc_nums[c], shuffle=True)
+    else:
+        return DataLoader(dataset, batch_size=dataset.data.shape[0], shuffle=True)
+
 
 def tile(a, dim, n_tile):
     init_dim = a.size(dim)
@@ -154,17 +140,20 @@ def pairwise_dist(n, x):
     res = res.reshape(n, n)
     return res
 
-def calc_sigmas(num, train_dataset, value=None):
+# C is the coefficient
+def calc_sigmas(num, dataset, value=None, coef=None):
     sigmas = np.zeros(num_classes)
     if value != None:
         sigmas = np.ones(num_classes) * value
     else:
-        x = train_dataset.data / 255.0
+        x = dataset.data / 255.0
         x_vec = x.reshape(x.shape[0], -1)
         for c in range(num_classes):
             tmp_x = x_vec[C[c][0:num]]
             tmp_xdist = pairwise_dist(num, tmp_x)
             sigmas[c] = torch.sum(tmp_xdist) / (num * (num - 1))
+            if coef != None:
+                sigmas[c] *= coef
     return sigmas
 
 # calculate class matrix, if res[i,j] = 1, it means there exists an edge
@@ -182,8 +171,16 @@ def calc_weights(data, targets, sigmas):
     
     pd = pairwise_dist(batch_size, data)
     pd = pd.reshape(batch_size, batch_size)
-    pd = torch.exp(-pd ** 2 / sigmas[0] ** 2)
 
+    tmp = np.zeros(len(targets))
+    for i in range(len(targets)):
+        tmp[i] = sigmas[targets[i]]
+    sigmas_mat = torch.tensor(np.tile(tmp, (batch_size, 1)))
+
+    tmp2 = torch.divide(-pd ** 2, sigmas_mat ** 2)
+
+    pd = torch.exp(tmp2)
+    
     targets_matrix = class_matrix(batch_size, targets)
     edges_num = (torch.sum(targets_matrix) - batch_size) / 2
     W = pd * targets_matrix
@@ -204,43 +201,44 @@ def calc_loss(W, e_num, x, targets, lam):
 
     W_vec = W.reshape(-1)
     f_dist_vec = f_dist.reshape(-1) ** 2
-    J = lam * torch.dot(W_vec, f_dist_vec) / e_num
+    J = lam * torch.dot(W_vec, f_dist_vec.double()) / e_num
 
     return J
 
-def test(model, loader, epoch, writer):
+def test(model, loaders):
     model.eval()
-
-    num_correct = 0
-    num_samples = 0
-
-    test_loss = 0
 
     criterion = nn.CrossEntropyLoss()
 
     with torch.no_grad():
-        for x, y in loader:
-            x = x.to(device=device)
-            y = y.to(device=device)
+        test_loss, acc = np.zeros(10), np.zeros(10)
+        for idx, loader in enumerate(loaders):
+            num_correct = 0
+            num_samples = 0
+            for x, y in loader:
+                x = x.to(device=device)
+                y = y.to(device=device)
 
-            scores = model(x)
-            test_loss += criterion(scores, y)
+                scores = model(x)
+                test_loss[idx] += criterion(scores, y)
 
-            _, predictions = scores.max(1)
+                _, predictions = scores.max(1)
 
-            predictions = predictions.reshape(-1)
-            num_correct += (predictions == y).sum()
-            num_samples += predictions.size(0)
-        
-        test_loss /= 100
-        accuracy = num_correct / num_samples
-        return test_loss, accuracy
+                predictions = predictions.reshape(-1)
+                num_correct += (predictions == y).sum()
+                num_samples += predictions.size(0)
+            
+            acc[idx] = (num_correct / num_samples) * 100
+        return test_loss, acc
 
-def train(name_dataset, num, wd, lam, bw, seed, t, mode=None):
-    train_dataset, train_loader, test_dataset, test_loader = loadData()
+def train(name_dataset, seed, num, wd, lam, coef, mode=None):
+    
+    # if bw != None:
+    #     sigmas = calc_sigmas(num, train_dataset, bw)
+    # else:
+    sigmas = calc_sigmas(num, train_dataset, coef=coef)
 
-    if mode != None and bw != None:
-        sigmas = calc_sigmas(num, train_dataset, bw)
+    print(sigmas)
 
     model = CNN().to(device)
     criterion = nn.CrossEntropyLoss()
@@ -296,32 +294,37 @@ def train(name_dataset, num, wd, lam, bw, seed, t, mode=None):
             print(f"    batch_train_loss: {loss:.4f}, original={loss:.4f}, J3={J3:.4f}, J5={J5:.4f}", flush=True)
             train_loss += loss
 
-
-        train_loss /= len(trainloader)
-        test_loss, acc = test(model, test_loader, epoch, writer)
-        acc *= 100
-        train_loss, test_loss, acc = train_loss.item(), test_loss.item(), acc.item()
+        train_loss /= len(trainloader)    # num: 50, 100, 200, 500, 1000
+    # wd: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1:1e-1:5e-1]
+    # lam: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1]
+    # bw: np.logspace(-3, 3, 50)
+        test_loss, acc = test(model, test_loaders)
+        train_loss, test_loss, acc = train_loss.item(), [test_loss[c].item() for c in range(10)], [acc[c].item() for c in range(10)]
         if mode == None:
             results.append([epoch, train_loss, test_loss, acc])
         if mode == "one":
             results.append([epoch, train_loss, test_loss, acc])
-        print(f'(lam={lam},bw={bw},t={t})epoch={epoch}, trainloss={train_loss:.3f}, testloss={test_loss:.3f}, testacc={acc:.3f}', flush=True)
+        testloss_print = ["{:.3f}".format(test_loss[i]) for i in range(N)]
+        acc_print = ["{:.3f}".format(acc[i]) for i in range(N)]
+        print(f'(num={num},lam={lam},coef={coef})epoch={epoch}, trainloss={train_loss:.3f}, testloss={testloss_print}, testacc={acc_print}', flush=True)
         model.train()
 
     return model
     
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument('--num', type=int, default=50, help='number of each class')
+    parser.add_argument('--seed', type=int, default=0, help='seed value')
+    parser.add_argument('--num', type=int, default=100, help='number of each class')
     parser.add_argument('--wd', type=float, default=0, help='weight decay parameter')
-    parser.add_argument('--lam', type=float, default=0, help='graph connect coefficient lambda')
-    parser.add_argument('--bw', type=float, default=1e-5, help='bandwidth(sigma)')
-    parser.add_argument('--T', type=int, default=1, help='number of running times')
-    parser.add_argument('--seedtype', type=str, default='one', help='seed type, including 3 types: "one", "multiple", "random"')
+    parser.add_argument('--lam', type=float, default=0.0001, help='graph connect coefficient lambda')
+    parser.add_argument('--coef', type=float, default=1, help='bandwidth(sigma) coefficient')
 
     args = parser.parse_args()
-    print(f'num={args.num}, wd={args.wd}, lam={args.lam}, bw={args.bw}, T={args.T}, seedtype={args.seedtype}', flush=True )
+    print(f'seed={args.seed}, num={args.num}, wd={args.wd}, lam={args.lam}, coef={args.coef}', flush=True)
+    seed, num, wd, lam, coef = args.seed, args.num, args.wd, args.lam, args.coef
+    coef_str = "{:.4f}".format(coef)
 
     # Set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -332,32 +335,62 @@ if __name__ == "__main__":
     num_classes = 10
     learning_rate = 0.001
     batch_size = 100
-    num_epochs = 200
+    num_epochs = 150
     momentum = 0.9
 
-    num, wd, lam, bw, T, seedtype = args.num, args.wd, args.lam, args.bw, args.T, args.seedtype
-    seeds = np.zeros(T)
-    if seedtype == 'one': # means all the T times use the same seed that the user enters
-        seed = input('enter one seed: ')
-        seeds = int(seed) * np.ones(T)
-    elif seedtype == 'multiple': # means different times use different seeds
-        while True:
-            seeds = [int(item) for item in input('enter the seeds: ').split()]
-            if len(seeds) == T:
-                break
-    elif seedtype == 'random': # randomly generate T seeds
-        seeds = np.random.randint(1, 100, size=T)
+
+    # load data
+    transform = transforms.Compose([transforms.ToTensor()])
+    train_dataset = datasets.MNIST(
+        root="./data/", train=True, transform=transform, download=True
+    )
+    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+
+    test_dataset = datasets.MNIST(
+        root="./data/", train=False, transform=transforms.ToTensor(), download=True
+    )
+
+    # split each class
+    N = torch.unique(train_dataset.targets).shape[0]
+    l = torch.arange(train_dataset.data.shape[0])
+    C = {}
+    for i in range(0, N):
+        tmp = l[train_dataset.targets == i]
+        torch.manual_seed(seed)
+        t = torch.randperm(tmp.size(0))
+        C[i] = tmp[t]
+    
+    # get number of samples of each class in test dataset
+    test_loaders = []
+    tc_nums = []
+    for c in range(10):
+        tc_nums.append(test_dataset.targets[test_dataset.targets==c].shape[0])
+        test_loaders.append(getTestLoader(test_dataset, c))
+    
+    # num: 50, 100, 200, 500, 1000
+    # wd: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1:1e-1:5e-1]
+    # lam: [0 1e-5,5e-5,1e-4,5e-4,1e-3,5e-3,1e-2,5e-2,1e-1]
+    # bw: np.logspace(-3, 3, 50)
+    
+    # open a log file
+    cwd = os.getcwd()
+    print(cwd)
+
+    log_file = open(f"{cwd}/log_eachclass/seed{seed}__num{num}_wd{wd}_lam{lam}_coef{coef_str}.log", 'w')
+    sys.stdout = log_file
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
-    filename = f"num{num}_lam{lam}_bw{bw}.csv"
+    
+    
+    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_num{num}_wd{wd}_lam{lam}_coef{coef_str}.csv"
     with open(filename, 'w') as f:
         writer = csv.writer(f, dialect='excel')
-        for t in range(T):
-            results = [] # each epoch result
-            train(name_dataset="MNIST", num=num, wd=wd, lam=lam, bw=bw, t=t, seed=seeds[t], mode="one")
-            written_results.append(results[-1])
+        results = [] # each epoch result
+        train(name_dataset="MNIST", seed=seed, num=num, wd=wd, lam=lam, coef=coef, mode="one")
+        written_results.append(results)
         writer.writerows(written_results)
+    log_file.close()
         
 
 
