@@ -276,12 +276,16 @@ def train(name_dataset, seed, num, wd, lam, coef, mode=None):
 
                 loss = ori_loss + J3 + J5
 
+                print(f"    batch_train_loss: {loss:.4f}, original={loss:.4f}, J3={J3:.4f}, J5={J5:.4f}", flush=True)
+
 
             elif mode == "all":
                 # layer 6 loss
                 J6 = calc_loss(W, edges_num, model.out6, targets, lam)
 
                 loss = ori_loss + J6
+
+                print(f"    batch_train_loss: {loss:.4f}, original={loss:.4f}, J6={J6:.4f}", flush=True)
             
             # backward
             optimizer.zero_grad()
@@ -291,7 +295,7 @@ def train(name_dataset, seed, num, wd, lam, coef, mode=None):
             optimizer.step()
 
             # for future print
-            print(f"    batch_train_loss: {loss:.4f}, original={loss:.4f}, J3={J3:.4f}, J5={J5:.4f}", flush=True)
+            
             train_loss += loss
 
         train_loss /= len(trainloader)    # num: 50, 100, 200, 500, 1000
@@ -300,10 +304,7 @@ def train(name_dataset, seed, num, wd, lam, coef, mode=None):
     # bw: np.logspace(-3, 3, 50)
         test_loss, acc = test(model, test_loaders)
         train_loss, test_loss, acc = train_loss.item(), [test_loss[c].item() for c in range(10)], [acc[c].item() for c in range(10)]
-        if mode == None:
-            results.append([epoch, train_loss, test_loss, acc])
-        if mode == "one":
-            results.append([epoch, train_loss, test_loss, acc])
+        results.append([epoch, train_loss, test_loss, acc])
         testloss_print = ["{:.3f}".format(test_loss[i]) for i in range(N)]
         acc_print = ["{:.3f}".format(acc[i]) for i in range(N)]
         print(f'(num={num},lam={lam},coef={coef})epoch={epoch}, trainloss={train_loss:.3f}, testloss={testloss_print}, testacc={acc_print}', flush=True)
@@ -376,18 +377,18 @@ if __name__ == "__main__":
     cwd = os.getcwd()
     print(cwd)
 
-    log_file = open(f"{cwd}/log_eachclass/seed{seed}__num{num}_wd{wd}_lam{lam}_coef{coef_str}.log", 'w')
+    log_file = open(f"{cwd}/log_eachclass/seed{seed}__num{num}_wd{wd}_lam{lam}_coef{coef_str}_all.log", 'w')
     sys.stdout = log_file
     
     # torch.cuda.empty_cache()
     written_results = [] # final epoch result
     
     
-    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_num{num}_wd{wd}_lam{lam}_coef{coef_str}.csv"
+    filename = f"{cwd}/gc_mnist_result_eachclass/seed{seed}_num{num}_wd{wd}_lam{lam}_coef{coef_str}_all.csv"
     with open(filename, 'w') as f:
         writer = csv.writer(f, dialect='excel')
         results = [] # each epoch result
-        train(name_dataset="MNIST", seed=seed, num=num, wd=wd, lam=lam, coef=coef, mode="one")
+        train(name_dataset="MNIST", seed=seed, num=num, wd=wd, lam=lam, coef=coef, mode="all")
         written_results.append(results)
         writer.writerows(written_results)
     log_file.close()

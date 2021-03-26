@@ -266,13 +266,16 @@ def train(name_dataset, tc, seed, num, wd, lam, bw, mode=None):
             ori_loss = criterion(scores, targets)
             
             if mode == "one":
+                # layer 1 loss
+                J1 = calc_loss(W, edges_num, model.out1, targets, lam)
+
                 # layer 3 loss
                 J3 = calc_loss(W, edges_num, model.out3, targets, lam)
 
                 # layer 5 loss
                 J5 = calc_loss(W, edges_num, model.out5, targets, lam)
 
-                loss = ori_loss + J3 + J5
+                loss = ori_loss + J1
 
 
             elif mode == "all":

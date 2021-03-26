@@ -30,10 +30,10 @@ def plt_bw(test_class):
         xx = np.array([x[i] for i in range(len(x)) if y[i, 1] != 0])
         yy = np.array([y[i] for i in range(len(x)) if y[i, 1] != 0])
         plt.plot(xx, yy[:, 1], ls='-', marker='.', label=f'train loss, lam={lam}')
-    plt.xscale('log')
+    # plt.xscale('log')
     plt.xlabel('bandwidth')
     plt.ylabel('training loss')
-    plt.legend()
+    # plt.legend()
     plt.grid(True)
 
     plt.subplot(132)
@@ -42,10 +42,10 @@ def plt_bw(test_class):
         xx = np.array([x[i] for i in range(len(x)) if y[i, 2] != 0])
         yy = np.array([y[i] for i in range(len(x)) if y[i, 2] != 0])
         plt.plot(xx, yy[:, 2], ls='-', marker='.', label=f'test loss, lam={lam}')
-    plt.xscale('log')
+    # plt.xscale('log')
     plt.xlabel('bandwidth coefficient')
     plt.ylabel('test loss')
-    plt.legend()
+    # plt.legend()
     plt.grid(True)
 
 
@@ -55,14 +55,15 @@ def plt_bw(test_class):
         xx = np.array([x[i] for i in range(len(x)) if y[i, 3] != 0])
         yy = np.array([y[i] for i in range(len(x)) if y[i, 3] != 0])
         plt.plot(xx, yy[:, 3], ls='-', marker='.', label=f'accuracy, lam={lam}')
-    plt.xscale('log')
+    # plt.xscale('log')
     plt.xlabel('bandwidth')
     plt.ylabel('accuracy')
-    plt.legend()
+    # plt.legend()
     plt.grid(True)
+
     # mngr = plt.get_current_fig_manager()
     # mngr.window.setGeometry(50,100,2000, 545)
-    fig.savefig(f"{test_class}.pdf")
+    fig.savefig(f"{test_class}_J1.pdf")
     plt.show()
 
 for i in range(10):

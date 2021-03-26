@@ -24,12 +24,17 @@ def name_proc(file_name):
     coef = float(strs[4].replace('coef', '').replace('.csv', ''))
     return num, wd, lam, coef
 
-def get_all_results(dir_path, num_epochs, test_class):
+def get_filenames(dir_path, small=False):
     filenames = os.listdir(dir_path)
-    for name in filenames:
-        f_dir = dir_path + name
-        res = file_proc(f_dir, num_epochs, test_class)
+    res = []
+    for f in filenames:
+        if "J1_debug" in f:
+            res.append(f)
+    return res
 
+def get_all_results(dir_path, num_epochs, test_class):
+    filenames = get_filenames(dir_path, small=True)
+    print(filenames)
     num, wd, lam, coef = [], [], [], []
     for name in filenames:
         n, w, l, co = name_proc(name)
@@ -63,6 +68,7 @@ def get_all_results(dir_path, num_epochs, test_class):
         res[d_num[n], d_wd[w], d_lam[l], d_coef[co], :] = file_proc(f_dir, num_epochs, test_class)
     return res, dicts
 
+# file_proc("./gc_mnist_result_eachclass/seed0_num200_wd0.0_lam0.0001_coef0.9000_all.csv", 150, 2)
 cur_dir = os.getcwd()
 if 'python_code' in cur_dir:
     cur_dir = cur_dir.replace('/python_code', '')

@@ -1,0 +1,112 @@
+[10.0134716   6.52907324 10.01178455  9.29536057  8.84560966  9.72538948
+  8.99744034  8.37508392  9.56919765  8.73225498]
+    batch_train_loss: 2.3069, original=2.3069, J6=0.0001
+    batch_train_loss: 2.3162, original=2.3162, J6=0.0001
+    batch_train_loss: 2.3051, original=2.3051, J6=0.0001
+    batch_train_loss: 2.3154, original=2.3154, J6=0.0001
+    batch_train_loss: 2.3103, original=2.3103, J6=0.0001
+    batch_train_loss: 2.3029, original=2.3029, J6=0.0001
+    batch_train_loss: 2.2993, original=2.2993, J6=0.0001
+    batch_train_loss: 2.2987, original=2.2987, J6=0.0001
+    batch_train_loss: 2.3019, original=2.3019, J6=0.0001
+    batch_train_loss: 2.3020, original=2.3020, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=0, trainloss=2.306, testloss=['2.369', '2.260', '2.252', '2.387', '2.308', '2.356', '2.287', '2.238', '2.304', '2.272'], testacc=['0.000', '24.581', '4.457', '0.000', '0.000', '0.000', '0.000', '68.191', '0.103', '1.883']
+    batch_train_loss: 2.3063, original=2.3063, J6=0.0001
+    batch_train_loss: 2.3030, original=2.3030, J6=0.0001
+    batch_train_loss: 2.3026, original=2.3026, J6=0.0001
+    batch_train_loss: 2.3026, original=2.3026, J6=0.0001
+    batch_train_loss: 2.3021, original=2.3021, J6=0.0001
+    batch_train_loss: 2.2968, original=2.2968, J6=0.0001
+    batch_train_loss: 2.3072, original=2.3072, J6=0.0001
+    batch_train_loss: 2.2981, original=2.2981, J6=0.0001
+    batch_train_loss: 2.2934, original=2.2934, J6=0.0001
+    batch_train_loss: 2.2973, original=2.2973, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=1, trainloss=2.301, testloss=['2.352', '2.265', '2.248', '2.376', '2.301', '2.352', '2.280', '2.237', '2.292', '2.268'], testacc=['0.000', '22.643', '11.822', '0.000', '0.000', '0.000', '0.104', '86.284', '0.205', '3.964']
+    batch_train_loss: 2.2930, original=2.2930, J6=0.0001
+    batch_train_loss: 2.2912, original=2.2912, J6=0.0001
+    batch_train_loss: 2.2897, original=2.2897, J6=0.0001
+    batch_train_loss: 2.3004, original=2.3004, J6=0.0001
+    batch_train_loss: 2.2940, original=2.2940, J6=0.0001
+    batch_train_loss: 2.2936, original=2.2936, J6=0.0001
+    batch_train_loss: 2.2924, original=2.2924, J6=0.0001
+    batch_train_loss: 2.2887, original=2.2887, J6=0.0001
+    batch_train_loss: 2.2907, original=2.2907, J6=0.0001
+    batch_train_loss: 2.3088, original=2.3088, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=2, trainloss=2.294, testloss=['2.334', '2.268', '2.247', '2.364', '2.293', '2.351', '2.267', '2.235', '2.278', '2.263'], testacc=['0.000', '20.881', '21.415', '0.000', '0.204', '0.000', '1.566', '91.342', '0.411', '10.010']
+    batch_train_loss: 2.2963, original=2.2963, J6=0.0001
+    batch_train_loss: 2.2914, original=2.2914, J6=0.0001
+    batch_train_loss: 2.2848, original=2.2848, J6=0.0001
+    batch_train_loss: 2.2833, original=2.2833, J6=0.0001
+    batch_train_loss: 2.2946, original=2.2946, J6=0.0001
+    batch_train_loss: 2.2875, original=2.2875, J6=0.0001
+    batch_train_loss: 2.2804, original=2.2804, J6=0.0001
+    batch_train_loss: 2.2877, original=2.2877, J6=0.0001
+    batch_train_loss: 2.2807, original=2.2807, J6=0.0001
+    batch_train_loss: 2.2819, original=2.2819, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=3, trainloss=2.287, testloss=['2.312', '2.273', '2.241', '2.347', '2.290', '2.342', '2.262', '2.235', '2.265', '2.259'], testacc=['0.000', '17.269', '41.764', '0.000', '1.120', '0.000', '3.027', '88.813', '4.107', '22.498']
+    batch_train_loss: 2.2809, original=2.2809, J6=0.0001
+    batch_train_loss: 2.2870, original=2.2870, J6=0.0001
+    batch_train_loss: 2.2805, original=2.2805, J6=0.0001
+    batch_train_loss: 2.2736, original=2.2736, J6=0.0001
+    batch_train_loss: 2.2802, original=2.2802, J6=0.0001
+    batch_train_loss: 2.2789, original=2.2789, J6=0.0001
+    batch_train_loss: 2.2746, original=2.2746, J6=0.0001
+    batch_train_loss: 2.2793, original=2.2793, J6=0.0001
+    batch_train_loss: 2.2808, original=2.2808, J6=0.0001
+    batch_train_loss: 2.2761, original=2.2761, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=4, trainloss=2.279, testloss=['2.288', '2.275', '2.236', '2.335', '2.280', '2.338', '2.252', '2.236', '2.257', '2.250'], testacc=['0.000', '16.123', '55.523', '0.000', '4.175', '0.000', '8.664', '80.642', '12.115', '48.860']
+    batch_train_loss: 2.2786, original=2.2786, J6=0.0001
+    batch_train_loss: 2.2713, original=2.2713, J6=0.0001
+    batch_train_loss: 2.2800, original=2.2800, J6=0.0001
+    batch_train_loss: 2.2641, original=2.2641, J6=0.0001
+    batch_train_loss: 2.2727, original=2.2727, J6=0.0001
+    batch_train_loss: 2.2727, original=2.2727, J6=0.0001
+    batch_train_loss: 2.2638, original=2.2638, J6=0.0001
+    batch_train_loss: 2.2712, original=2.2712, J6=0.0001
+    batch_train_loss: 2.2713, original=2.2713, J6=0.0001
+    batch_train_loss: 2.2667, original=2.2667, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=5, trainloss=2.271, testloss=['2.264', '2.281', '2.230', '2.324', '2.275', '2.331', '2.242', '2.230', '2.244', '2.243'], testacc=['1.020', '7.930', '58.915', '0.000', '7.434', '0.000', '13.883', '79.377', '35.524', '62.240']
+    batch_train_loss: 2.2621, original=2.2621, J6=0.0001
+    batch_train_loss: 2.2746, original=2.2746, J6=0.0001
+    batch_train_loss: 2.2591, original=2.2591, J6=0.0001
+    batch_train_loss: 2.2720, original=2.2720, J6=0.0001
+    batch_train_loss: 2.2632, original=2.2632, J6=0.0001
+    batch_train_loss: 2.2594, original=2.2594, J6=0.0001
+    batch_train_loss: 2.2621, original=2.2621, J6=0.0001
+    batch_train_loss: 2.2578, original=2.2578, J6=0.0001
+    batch_train_loss: 2.2601, original=2.2601, J6=0.0001
+    batch_train_loss: 2.2580, original=2.2580, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=6, trainloss=2.263, testloss=['2.242', '2.281', '2.228', '2.310', '2.270', '2.327', '2.229', '2.228', '2.229', '2.235'], testacc=['17.143', '6.432', '56.105', '0.297', '8.961', '0.000', '29.436', '73.346', '65.503', '67.988']
+    batch_train_loss: 2.2556, original=2.2556, J6=0.0001
+    batch_train_loss: 2.2544, original=2.2544, J6=0.0001
+    batch_train_loss: 2.2551, original=2.2551, J6=0.0001
+    batch_train_loss: 2.2532, original=2.2532, J6=0.0001
+    batch_train_loss: 2.2508, original=2.2508, J6=0.0001
+    batch_train_loss: 2.2511, original=2.2511, J6=0.0001
+    batch_train_loss: 2.2545, original=2.2545, J6=0.0001
+    batch_train_loss: 2.2562, original=2.2562, J6=0.0001
+    batch_train_loss: 2.2527, original=2.2527, J6=0.0001
+    batch_train_loss: 2.2574, original=2.2574, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=7, trainloss=2.254, testloss=['2.217', '2.281', '2.223', '2.296', '2.258', '2.327', '2.219', '2.222', '2.215', '2.232'], testacc=['61.122', '6.256', '52.810', '0.990', '18.737', '0.000', '44.050', '75.778', '86.550', '62.042']
+    batch_train_loss: 2.2442, original=2.2442, J6=0.0001
+    batch_train_loss: 2.2483, original=2.2483, J6=0.0001
+    batch_train_loss: 2.2427, original=2.2427, J6=0.0001
+    batch_train_loss: 2.2498, original=2.2498, J6=0.0001
+    batch_train_loss: 2.2423, original=2.2423, J6=0.0001
+    batch_train_loss: 2.2473, original=2.2473, J6=0.0001
+    batch_train_loss: 2.2364, original=2.2364, J6=0.0001
+    batch_train_loss: 2.2380, original=2.2380, J6=0.0001
+    batch_train_loss: 2.2460, original=2.2460, J6=0.0001
+    batch_train_loss: 2.2496, original=2.2496, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=8, trainloss=2.244, testloss=['2.191', '2.281', '2.213', '2.287', '2.250', '2.322', '2.203', '2.217', '2.201', '2.226'], testacc=['83.265', '5.022', '56.105', '1.485', '22.811', '0.000', '65.240', '74.125', '93.018', '61.744']
+    batch_train_loss: 2.2362, original=2.2362, J6=0.0001
+    batch_train_loss: 2.2409, original=2.2409, J6=0.0001
+    batch_train_loss: 2.2281, original=2.2281, J6=0.0001
+    batch_train_loss: 2.2298, original=2.2298, J6=0.0001
+    batch_train_loss: 2.2366, original=2.2366, J6=0.0001
+    batch_train_loss: 2.2276, original=2.2276, J6=0.0001
+    batch_train_loss: 2.2284, original=2.2284, J6=0.0001
+    batch_train_loss: 2.2375, original=2.2375, J6=0.0001
+    batch_train_loss: 2.2407, original=2.2407, J6=0.0001
+    batch_train_loss: 2.2357, original=2.2357, J6=0.0001
+(num=100,lam=0.0001,coef=1)epoch=9, trainloss=2.234, testloss=['2.164', '2.281', '2.205', '2.275', '2.245', '2.314', '2.186', '2.207', '2.187', '2.219'], testacc=['89.592', '4.317', '56.298', '2.475', '23.727', '0.224', '75.992', '74.903', '94.969', '59.861']

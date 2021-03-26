@@ -20,7 +20,7 @@ for n in num:
             for w in wd:
                 for l in lam:
                     for co in coef:
-                        process = f"./python_code/gc_mnist_v2.py --seed={s} --num={n} --wd={w} --lam={l} --coef={co}"
+                        process = f"./python_code/gc_mnist_start.py --seed={s} --num={n} --wd={w} --lam={l} --coef={co}"
                         processes.append(process)
 
 eachtime = 1
