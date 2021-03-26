@@ -8,8 +8,8 @@ import time
 num = [200]
 seed = [0]
 wd = [0]
-lam = [0.0001]
-coef = np.arange(0.90, 1, 0.1)
+lam = [0.001, 0.0001]
+coef = np.arange(0.1, 2.5, 0.1)
 
 def run_process(process):
     os.system("python {}".format(process))
@@ -20,7 +20,7 @@ for n in num:
             for w in wd:
                 for l in lam:
                     for co in coef:
-                        process = f"./python_code/gc_mnist_v2.py --seed={s} --num={n} --wd={w} --lam={l} --coef={co}"
+                        process = f"./python_code/gc_mnist_v3.py --seed={s} --num={n} --wd={w} --lam={l} --coef={co}"
                         processes.append(process)
 
 eachtime = 1

@@ -8,8 +8,8 @@ import time
 num = [200]
 seed = [0]
 wd = [0]
-lam = [0.0001]
-coef = np.arange(0.1, 0.5, 0.1)
+lam = [0.001, 0.0001]
+coef = np.arange(2.5, 5, 0.1)
 
 def run_process(process):
     os.system("python {}".format(process))
