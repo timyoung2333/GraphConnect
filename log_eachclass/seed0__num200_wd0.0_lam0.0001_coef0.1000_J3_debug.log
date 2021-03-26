@@ -1,0 +1,15 @@
+[0.99495306 0.65222669 1.00661888 0.94483051 0.88635321 0.96600962
+ 0.91192579 0.85463095 0.96007919 0.86555901]
+    batch_train_loss: 2.3059, original=2.3059, J3=0.0000
+    batch_train_loss: 2.3085, original=2.3085, J3=0.0000
+    batch_train_loss: 2.3033, original=2.3033, J3=0.0000
+    batch_train_loss: 2.3035, original=2.3035, J3=0.0000
+    batch_train_loss: 2.3103, original=2.3103, J3=0.0000
+    batch_train_loss: 2.3193, original=2.3193, J3=0.0000
+    batch_train_loss: 2.3086, original=2.3086, J3=0.0000
+    batch_train_loss: 2.2985, original=2.2985, J3=0.0000
+    batch_train_loss: 2.2954, original=2.2954, J3=0.0000
+    batch_train_loss: 2.3095, original=2.3095, J3=0.0000
+    batch_train_loss: 2.3085, original=2.3085, J3=0.0000
+    batch_train_loss: 2.2963, original=2.2963, J3=0.0000
+    batch_train_loss: 2.3045, original=2.3045, J3=0.0000

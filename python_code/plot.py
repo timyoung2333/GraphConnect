@@ -33,7 +33,7 @@ def plt_bw(test_class):
     # plt.xscale('log')
     plt.xlabel('bandwidth')
     plt.ylabel('training loss')
-    plt.legend()
+    # plt.legend()
     plt.grid(True)
 
     plt.subplot(132)
@@ -45,7 +45,7 @@ def plt_bw(test_class):
     # plt.xscale('log')
     plt.xlabel('bandwidth coefficient')
     plt.ylabel('test loss')
-    plt.legend()
+    # plt.legend()
     plt.grid(True)
 
 
@@ -58,12 +58,12 @@ def plt_bw(test_class):
     # plt.xscale('log')
     plt.xlabel('bandwidth')
     plt.ylabel('accuracy')
-    plt.legend()
+    # plt.legend()
     plt.grid(True)
 
-    mngr = plt.get_current_fig_manager()
-    mngr.window.setGeometry(50,100,2000, 545)
-    fig.savefig(f"{test_class}.pdf")
+    # mngr = plt.get_current_fig_manager()
+    # mngr.window.setGeometry(50,100,2000, 545)
+    fig.savefig(f"{test_class}_J1.pdf")
     plt.show()
 
 for i in range(10):
