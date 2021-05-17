@@ -351,7 +351,7 @@ if __name__ == "__main__":
         results = [] # each epoch result
         train(name_dataset="MNIST", seed=seed, num=num, wd=wd, lam=lam, bw=bw, mode="one")
         written_results.append(results)
-        writer.writerows(written_results)
+        # writer.writerows(written_results)
         
 
 

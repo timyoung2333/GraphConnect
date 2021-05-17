@@ -336,7 +336,7 @@ if __name__ == "__main__":
     in_channel = 1
     num_classes = 10
     learning_rate = 0.001
-    batch_size = 100
+    batch_size = 1
     num_epochs = 150
     momentum = 0.9
 
